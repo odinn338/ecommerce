@@ -1,0 +1,652 @@
+// // Initialize Lucide Icons
+// document.addEventListener('DOMContentLoaded', function() {
+//     if (typeof lucide !== 'undefined') {
+//         lucide.createIcons();
+//     }
+//     updateCartCount();
+// });
+
+// // Products Data
+// const products = [
+//     { id: 1, name: 'هاتف ذكي Pro X', price: 2999, description: 'أحدث تكنولوجيا بمواصفات فائقة', icon: 'smartphone', badge: 'جديد' },
+//     { id: 2, name: 'سماعات لاسلكية Pro', price: 799, description: 'صوت نقي وجودة عالية', icon: 'headphones', badge: 'خصم 20%', badgeClass: 'sale' },
+//     { id: 3, name: 'ساعة ذكية Sport', price: 1499, description: 'تتبع نشاطك اليومي بذكاء', icon: 'watch' },
+//     { id: 4, name: 'لابتوب Ultra Book', price: 12999, description: 'أداء قوي وتصميم أنيق', icon: 'laptop', badge: 'الأكثر مبيعاً' },
+//     { id: 5, name: 'تابلت Pro Max', price: 5499, description: 'شاشة رائعة للعمل والترفيه', icon: 'tablet' },
+//     { id: 6, name: 'كاميرا رقمية 4K', price: 8999, description: 'التقط لحظاتك بجودة احترافية', icon: 'camera' },
+//     { id: 7, name: 'سماعات أذن Pro', price: 599, description: 'راحة طوال اليوم', icon: 'headphones', badge: 'جديد' },
+//     { id: 8, name: 'شاحن سريع', price: 299, description: 'شحن فائق السرعة', icon: 'battery-charging' },
+//     { id: 9, name: 'ماوس لاسلكي', price: 399, description: 'دقة وراحة في الاستخدام', icon: 'mouse' },
+//     { id: 10, name: 'لوحة مفاتيح ميكانيكية', price: 899, description: 'تجربة كتابة مميزة', icon: 'keyboard' },
+//     { id: 11, name: 'شاشة 4K', price: 6999, description: 'ألوان حية ودقة عالية', icon: 'monitor', badge: 'خصم 15%', badgeClass: 'sale' },
+//     { id: 12, name: 'بنك طاقة 20000mAh', price: 499, description: 'طاقة تدوم طويلاً', icon: 'battery' }
+// ];
+
+// // Cart Functions
+// function getCart() {
+//     const cart = localStorage.getItem('cart');
+//     return cart ? JSON.parse(cart) : [];
+// }
+
+// function saveCart(cart) {
+//     localStorage.setItem('cart', JSON.stringify(cart));
+//     updateCartCount();
+// }
+
+// function updateCartCount() {
+//     const cart = getCart();
+//     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+//     const cartCountElements = document.querySelectorAll('.cart-count');
+//     cartCountElements.forEach(el => {
+//         el.textContent = totalItems;
+//     });
+// }
+
+// function addToCart(productId) {
+//     const product = products.find(p => p.id === productId);
+//     if (!product) return;
+
+//     const cart = getCart();
+//     const existingItem = cart.find(item => item.id === productId);
+
+//     if (existingItem) {
+//         existingItem.quantity += 1;
+//     } else {
+//         cart.push({
+//             id: product.id,
+//             name: product.name,
+//             price: product.price,
+//             icon: product.icon,
+//             quantity: 1
+//         });
+//     }
+
+//     saveCart(cart);
+//     showNotification('تم إضافة المنتج إلى السلة', 'success');
+    
+//     // Animation effect
+//     const productCard = document.querySelector(`[data-product-id="${productId}"]`);
+//     if (productCard) {
+//         productCard.style.animation = 'none';
+//         setTimeout(() => {
+//             productCard.style.animation = 'pulse 0.5s ease';
+//         }, 10);
+//     }
+// }
+
+// function removeFromCart(productId) {
+//     let cart = getCart();
+//     cart = cart.filter(item => item.id !== productId);
+//     saveCart(cart);
+//     renderCart();
+//     showNotification('تم حذف المنتج من السلة', 'success');
+// }
+
+// function updateQuantity(productId, change) {
+//     const cart = getCart();
+//     const item = cart.find(item => item.id === productId);
+    
+//     if (item) {
+//         item.quantity += change;
+//         if (item.quantity <= 0) {
+//             removeFromCart(productId);
+//             return;
+//         }
+//         saveCart(cart);
+//         renderCart();
+//     }
+// }
+
+// function renderCart() {
+//     const cartItemsContainer = document.getElementById('cart-items');
+//     const cart = getCart();
+
+//     if (cart.length === 0) {
+//         cartItemsContainer.innerHTML = `
+//             <div class="empty-cart">
+//                 <i data-lucide="shopping-cart"></i>
+//                 <h2>السلة فارغة</h2>
+//                 <p>لم تقم بإضافة أي منتجات بعد</p>
+//                 <a href="products.html" class="btn-primary">تصفح المنتجات</a>
+//             </div>
+//         `;
+//         lucide.createIcons();
+//         return;
+//     }
+
+//     let html = '';
+//     let subtotal = 0;
+
+//     cart.forEach((item, index) => {
+//         const itemTotal = item.price * item.quantity;
+//         subtotal += itemTotal;
+        
+//         html += `
+//             <div class="cart-item" style="animation-delay: ${index * 0.1}s">
+//                 <div class="cart-item-image">
+//                     <i data-lucide="${item.icon}"></i>
+//                 </div>
+//                 <div class="cart-item-details">
+//                     <h3>${item.name}</h3>
+//                     <p>${item.price} ج.م</p>
+//                     <div class="quantity-controls">
+//                         <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">
+//                             <i data-lucide="minus"></i>
+//                         </button>
+//                         <span class="quantity">${item.quantity}</span>
+//                         <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">
+//                             <i data-lucide="plus"></i>
+//                         </button>
+//                     </div>
+//                 </div>
+//                 <div class="cart-item-price">
+//                     <div class="price">${itemTotal.toLocaleString()} ج.م</div>
+//                     <button class="remove-btn" onclick="removeFromCart(${item.id})">
+//                         <i data-lucide="trash-2"></i>
+//                     </button>
+//                 </div>
+//             </div>
+//         `;
+//     });
+
+//     cartItemsContainer.innerHTML = html;
+
+//     // Update summary
+//     const shipping = subtotal > 0 ? 50 : 0;
+//     const total = subtotal + shipping;
+
+//     document.getElementById('subtotal').textContent = subtotal.toLocaleString() + ' ج.م';
+//     document.getElementById('shipping').textContent = shipping + ' ج.م';
+//     document.getElementById('total').textContent = total.toLocaleString() + ' ج.م';
+
+//     lucide.createIcons();
+// }
+
+// function renderProducts() {
+//     const productsContainer = document.getElementById('products-container');
+//     if (!productsContainer) return;
+
+//     let html = '';
+//     products.forEach((product, index) => {
+//         const badgeHtml = product.badge ? 
+//             `<div class="product-badge ${product.badgeClass || ''}">${product.badge}</div>` : '';
+        
+//         html += `
+//             <div class="product-card" data-product-id="${product.id}" style="animation-delay: ${index * 0.05}s">
+//                 ${badgeHtml}
+//                 <div class="product-image">
+//                     <div class="placeholder-image">
+//                         <i data-lucide="${product.icon}"></i>
+//                     </div>
+//                 </div>
+//                 <div class="product-info">
+//                     <h3>${product.name}</h3>
+//                     <p class="product-description">${product.description}</p>
+//                     <div class="product-footer">
+//                         <span class="product-price">${product.price.toLocaleString()} ج.م</span>
+//                         <button class="btn-add-cart" onclick="addToCart(${product.id})">
+//                             <i data-lucide="shopping-cart"></i>
+//                         </button>
+//                     </div>
+//                 </div>
+//             </div>
+//         `;
+//     });
+
+//     productsContainer.innerHTML = html;
+//     lucide.createIcons();
+// }
+
+// // Notification System
+// function showNotification(message, type = 'success') {
+//     const notification = document.createElement('div');
+//     notification.className = `notification ${type}`;
+//     notification.innerHTML = `
+//         <div style="
+//             position: fixed;
+//             top: 100px;
+//             right: 20px;
+//             background: ${type === 'success' ? '#10b981' : '#ef4444'};
+//             color: white;
+//             padding: 1rem 2rem;
+//             border-radius: 12px;
+//             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+//             z-index: 9999;
+//             animation: slideInRight 0.4s ease;
+//         ">
+//             ${message}
+//         </div>
+//     `;
+    
+//     document.body.appendChild(notification);
+    
+//     setTimeout(() => {
+//         notification.style.animation = 'slideOutRight 0.4s ease';
+//         setTimeout(() => {
+//             document.body.removeChild(notification);
+//         }, 400);
+//     }, 3000);
+// }
+
+// // Auth Functions
+// function handleLogin(event) {
+//     event.preventDefault();
+//     const email = document.getElementById('email').value;
+//     const password = document.getElementById('password').value;
+
+//     if (!email || !password) {
+//         showNotification('الرجاء ملء جميع الحقول', 'error');
+//         return;
+//     }
+
+//     // Simple validation
+//     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//     if (!emailRegex.test(email)) {
+//         showNotification('البريد الإلكتروني غير صحيح', 'error');
+//         return;
+//     }
+
+//     // Store user data (in real app, this would be server-side)
+//     localStorage.setItem('user', JSON.stringify({ email, loggedIn: true }));
+//     showNotification('تم تسجيل الدخول بنجاح', 'success');
+    
+//     setTimeout(() => {
+//         window.location.href = 'index.html';
+//     }, 1500);
+// }
+
+// function handleSignup(event) {
+//     event.preventDefault();
+//     const name = document.getElementById('name').value;
+//     const email = document.getElementById('email').value;
+//     const password = document.getElementById('password').value;
+//     const confirmPassword = document.getElementById('confirm-password').value;
+
+//     if (!name || !email || !password || !confirmPassword) {
+//         showNotification('الرجاء ملء جميع الحقول', 'error');
+//         return;
+//     }
+
+//     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//     if (!emailRegex.test(email)) {
+//         showNotification('البريد الإلكتروني غير صحيح', 'error');
+//         return;
+//     }
+
+//     if (password.length < 6) {
+//         showNotification('كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
+//         return;
+//     }
+
+//     if (password !== confirmPassword) {
+//         showNotification('كلمات المرور غير متطابقة', 'error');
+//         return;
+//     }
+
+//     localStorage.setItem('user', JSON.stringify({ name, email, loggedIn: true }));
+//     showNotification('تم إنشاء الحساب بنجاح', 'success');
+    
+//     setTimeout(() => {
+//         window.location.href = 'index.html';
+//     }, 1500);
+// }
+
+// function handleContact(event) {
+//     event.preventDefault();
+//     const name = document.getElementById('name').value;
+//     const email = document.getElementById('email').value;
+//     const subject = document.getElementById('subject').value;
+//     const message = document.getElementById('message').value;
+
+//     if (!name || !email || !subject || !message) {
+//         showNotification('الرجاء ملء جميع الحقول', 'error');
+//         return;
+//     }
+
+//     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//     if (!emailRegex.test(email)) {
+//         showNotification('البريد الإلكتروني غير صحيح', 'error');
+//         return;
+//     }
+
+//     // In real app, this would send to server
+//     showNotification('تم إرسال رسالتك بنجاح. سنتواصل معك قريباً', 'success');
+    
+//     setTimeout(() => {
+//         event.target.reset();
+//     }, 1500);
+// }
+
+// function checkout() {
+//     const cart = getCart();
+//     if (cart.length === 0) {
+//         showNotification('السلة فارغة', 'error');
+//         return;
+//     }
+
+//     const user = localStorage.getItem('user');
+//     if (!user) {
+//         showNotification('الرجاء تسجيل الدخول أولاً', 'error');
+//         setTimeout(() => {
+//             window.location.href = 'login.html';
+//         }, 1500);
+//         return;
+//     }
+
+//     showNotification('جاري معالجة الطلب...', 'success');
+    
+//     setTimeout(() => {
+//         localStorage.removeItem('cart');
+//         updateCartCount();
+//         showNotification('تم إتمام الطلب بنجاح! شكراً لك', 'success');
+//         setTimeout(() => {
+//             window.location.href = 'index.html';
+//         }, 2000);
+//     }, 2000);
+// }
+
+// // Add CSS for animations
+// const style = document.createElement('style');
+// style.textContent = `
+//     @keyframes slideInRight {
+//         from {
+//             transform: translateX(100%);
+//             opacity: 0;
+//         }
+//         to {
+//             transform: translateX(0);
+//             opacity: 1;
+//         }
+//     }
+    
+//     @keyframes slideOutRight {
+//         from {
+//             transform: translateX(0);
+//             opacity: 1;
+//         }
+//         to {
+//             transform: translateX(100%);
+//             opacity: 0;
+//         }
+//     }
+    
+//     @keyframes pulse {
+//         0%, 100% {
+//             transform: scale(1);
+//         }
+//         50% {
+//             transform: scale(1.05);
+//         }
+//     }
+// `;
+// document.head.appendChild(style);
+
+console.log('main.js loaded');
+
+// Initialize Lucide Icons
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+    updateCartCount();
+});
+
+// Cart Functions
+function getCart() {
+    const cart = localStorage.getItem('cart');
+    return cart ? JSON.parse(cart) : [];
+}
+
+function saveCart(cart) {
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+}
+
+function updateCartCount() {
+    const cart = getCart();
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const cartCountElements = document.querySelectorAll('.cart-count');
+    cartCountElements.forEach(el => {
+        el.textContent = totalItems;
+    });
+}
+
+function addToCart(productId, productName, productPrice, productImage) {
+    console.log('Adding to cart:', productId, productName, productPrice, productImage);
+    
+    const cart = getCart();
+    const existingItem = cart.find(item => item.id === productId);
+
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({
+            id: productId,
+            name: productName,
+            price: productPrice,
+            image: productImage || '',
+            quantity: 1
+        });
+    }
+
+    saveCart(cart);
+    showNotification('تم إضافة المنتج إلى السلة ✓', 'success');
+    
+    // Animation effect
+    const productCard = document.querySelector(`[data-product-id="${productId}"]`);
+    if (productCard) {
+        productCard.style.transform = 'scale(1.05)';
+        setTimeout(() => {
+            productCard.style.transform = 'scale(1)';
+        }, 200);
+    }
+}
+
+function removeFromCart(productId) {
+    let cart = getCart();
+    cart = cart.filter(item => item.id !== productId);
+    saveCart(cart);
+    renderCart();
+    showNotification('تم حذف المنتج من السلة', 'success');
+}
+
+function updateQuantity(productId, change) {
+    const cart = getCart();
+    const item = cart.find(item => item.id === productId);
+    
+    if (item) {
+        item.quantity += change;
+        if (item.quantity <= 0) {
+            removeFromCart(productId);
+            return;
+        }
+        saveCart(cart);
+        renderCart();
+    }
+}
+
+function renderCart() {
+    const cartItemsContainer = document.getElementById('cart-items');
+    
+    if (!cartItemsContainer) {
+        console.error('Cart container not found!');
+        return;
+    }
+    
+    const cart = getCart();
+    console.log('Rendering cart:', cart);
+
+    if (cart.length === 0) {
+        cartItemsContainer.innerHTML = `
+            <div class="empty-cart" style="text-align: center; padding: 60px 20px; background: white; border-radius: 15px;">
+                <i data-lucide="shopping-cart" style="width: 80px; height: 80px; margin: 0 auto 20px; display: block; color: #94a3b8;"></i>
+                <h2 style="color: #1e293b; margin-bottom: 10px; font-size: 24px;">السلة فارغة</h2>
+                <p style="color: #64748b; margin-bottom: 30px; font-size: 16px;">لم تقم بإضافة أي منتجات بعد</p>
+                <a href="products.php" class="btn-primary" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; text-decoration: none; border-radius: 10px; font-weight: 600;">تصفح المنتجات</a>
+            </div>
+        `;
+        
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+        
+        // Update summary to zero
+        const subtotalEl = document.getElementById('subtotal');
+        const shippingEl = document.getElementById('shipping');
+        const totalEl = document.getElementById('total');
+        
+        if (subtotalEl) subtotalEl.textContent = '0 ج.م';
+        if (shippingEl) shippingEl.textContent = '0 ج.م';
+        if (totalEl) totalEl.textContent = '0 ج.م';
+        
+        return;
+    }
+
+    let html = '';
+    let subtotal = 0;
+
+    cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+        
+        const imageHtml = item.image ? 
+            `<img src="${item.image}" alt="${item.name}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;">` : 
+            `<i data-lucide="box" style="width: 40px; height: 40px; color: #6366f1;"></i>`;
+        
+        html += `
+            <div class="cart-item" style="display: flex; gap: 20px; padding: 20px; background: white; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); animation: slideInUp 0.5s ease forwards; animation-delay: ${index * 0.1}s; opacity: 0;">
+                <div class="cart-item-image" style="width: 100px; height: 100px; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    ${imageHtml}
+                </div>
+                <div class="cart-item-details" style="flex: 1;">
+                    <h3 style="margin: 0 0 8px 0; color: #1e293b; font-size: 18px;">${item.name}</h3>
+                    <p style="margin: 0 0 15px 0; color: #64748b; font-size: 16px; font-weight: 600;">${Number(item.price).toLocaleString()} ج.م</p>
+                    <div class="quantity-controls" style="display: flex; align-items: center; gap: 12px;">
+                        <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)" style="width: 32px; height: 32px; border: 2px solid #e2e8f0; background: white; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
+                            <i data-lucide="minus" style="width: 16px; height: 16px;"></i>
+                        </button>
+                        <span class="quantity" style="font-weight: 600; color: #1e293b; min-width: 30px; text-align: center;">${item.quantity}</span>
+                        <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)" style="width: 32px; height: 32px; border: 2px solid #e2e8f0; background: white; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
+                            <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="cart-item-price" style="text-align: left; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end;">
+                    <div class="price" style="font-size: 20px; font-weight: 700; color: #6366f1;">${itemTotal.toLocaleString()} ج.م</div>
+                    <button class="remove-btn" onclick="removeFromCart(${item.id})" style="width: 36px; height: 36px; background: #fee2e2; border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
+                        <i data-lucide="trash-2" style="width: 18px; height: 18px; color: #991b1b;"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+
+    cartItemsContainer.innerHTML = html;
+
+    // Update summary
+    const shipping = subtotal > 0 ? 50 : 0;
+    const total = subtotal + shipping;
+
+    const subtotalEl = document.getElementById('subtotal');
+    const shippingEl = document.getElementById('shipping');
+    const totalEl = document.getElementById('total');
+    
+    if (subtotalEl) subtotalEl.textContent = subtotal.toLocaleString() + ' ج.م';
+    if (shippingEl) shippingEl.textContent = shipping + ' ج.م';
+    if (totalEl) totalEl.textContent = total.toLocaleString() + ' ج.م';
+
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+}
+
+function showNotification(message, type = 'success') {
+    // Remove existing notifications
+    const existing = document.querySelectorAll('.temp-notification');
+    existing.forEach(el => el.remove());
+    
+    const notification = document.createElement('div');
+    notification.className = 'temp-notification';
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: ${type === 'success' ? '#10b981' : '#ef4444'};
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        z-index: 99999;
+        animation: slideInRight 0.4s ease;
+        font-weight: 600;
+    `;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.4s ease';
+        setTimeout(() => {
+            notification.remove();
+        }, 400);
+    }, 3000);
+}
+
+function checkout() {
+    const cart = getCart();
+    if (cart.length === 0) {
+        showNotification('السلة فارغة', 'error');
+        return;
+    }
+
+    showNotification('جاري معالجة الطلب...', 'success');
+    
+    setTimeout(() => {
+        localStorage.removeItem('cart');
+        updateCartCount();
+        showNotification('تم إتمام الطلب بنجاح! شكراً لك', 'success');
+        setTimeout(() => {
+            window.location.href = 'index.php';
+        }, 2000);
+    }, 2000);
+}
+
+// Add CSS animations - استخدم اسم مختلف للمتغير
+if (!document.getElementById('cart-animations-style')) {
+    const cartStyles = document.createElement('style');
+    cartStyles.id = 'cart-animations-style';
+    cartStyles.textContent = `
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .quantity-btn:hover {
+            background: #f1f5f9 !important;
+            border-color: #6366f1 !important;
+        }
+        
+        .remove-btn:hover {
+            background: #ef4444 !important;
+        }
+        
+        .remove-btn:hover i {
+            color: white !important;
+        }
+        
+        .product-card {
+            transition: transform 0.2s ease;
+        }
+    `;
+    document.head.appendChild(cartStyles);
+}
